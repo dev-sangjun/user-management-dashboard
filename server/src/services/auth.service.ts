@@ -1,6 +1,6 @@
-import DBClient from "../../prisma/DBClient";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { OperationResponseDto } from "../dto/common.dto";
 import { UserAuthRequestDto } from "../dto/user.auth.dto";
 import {
@@ -8,50 +8,36 @@ import {
   EntityNotFoundError,
   InternalServerError,
 } from "../global/errors";
+import User from "../../models/user.model";
+
+dotenv.config();
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY!;
-const JWT_REFRESH_SECRET_KEY = process.env.JWT_REFRESH_SECRET_KEY!;
 
 const createUser = async (
   userAuthRequestDto: UserAuthRequestDto
 ): Promise<OperationResponseDto> => {
-  const { email, password } = userAuthRequestDto;
-
-  // check if email is already used
   try {
-    const user = await DBClient.user.findFirst({
-      where: {
-        email,
-      },
-    });
-    if (user) {
+    const oldUser = await User.findOne({ email: userAuthRequestDto.email });
+    // check if email is already in use
+    if (oldUser) {
       throw new DuplicateEntityError();
     }
-  } catch (e) {
-    if (e instanceof DuplicateEntityError) {
-      return {
-        success: false,
-        message: "Email is already in use.",
-      };
+    const newUser = await User.create(userAuthRequestDto);
+    if (!newUser) {
+      throw new InternalServerError();
     }
-    throw e;
-  }
-
-  // hash password & create user
-  const salt = await bcrypt.genSalt(); // generate salt to add before hashing
-  const hashedPassword = await bcrypt.hash(password, salt);
-  try {
-    await DBClient.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-      },
-    });
     return {
       success: true,
     };
   } catch (e) {
-    throw new InternalServerError();
+    return {
+      success: false,
+      message:
+        e instanceof DuplicateEntityError
+          ? "Email already in use"
+          : "Server error",
+    };
   }
 };
 
@@ -59,11 +45,7 @@ const signInUser = async (
   userAuthRequestDto: UserAuthRequestDto
 ): Promise<{ accessToken: string; userId: string }> => {
   const { email, password } = userAuthRequestDto;
-  const user = await DBClient.user.findFirst({
-    where: {
-      email,
-    },
-  });
+  const user = await User.findOne({ email });
   if (!user) {
     throw new EntityNotFoundError();
   }
@@ -74,7 +56,7 @@ const signInUser = async (
   // generate access token
   const accessToken = jwt.sign(
     {
-      userId: user.id,
+      userId: user._id.toString(),
     },
     JWT_SECRET_KEY,
     {
@@ -83,7 +65,7 @@ const signInUser = async (
   );
   return {
     accessToken,
-    userId: user.id,
+    userId: user._id.toString(),
   };
 };
 

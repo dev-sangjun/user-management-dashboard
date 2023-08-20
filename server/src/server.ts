@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import mongoose from "mongoose";
 import rootRoute from "./routes";
 
 dotenv.config();
@@ -18,4 +19,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", rootRoute);
-app.listen(PORT, () => console.log(`Server running at ${PORT}`));
+mongoose.connect(process.env.DATABASE_URL!).then(() => {
+  app.listen(PORT, () => console.log(`Server running at ${PORT}`));
+})
