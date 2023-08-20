@@ -1,27 +1,28 @@
-import DBClient from "../../prisma/DBClient";
+import Entry, { IEntry } from "../../models/entry.model";
 import { OperationResponseDto } from "../dto/common.dto";
-import { UserEntryRequestDto } from "../dto/entry.dto";
 
 const createEntry = async (
   userId: string,
-  userEntryRequestDto: UserEntryRequestDto
+  dto: IEntry
 ): Promise<OperationResponseDto> => {
-  console.log(userId)
   try {
-    await DBClient.userEntry.create({
-      data: {
-        ...userEntryRequestDto,
-        birthDate: new Date(userEntryRequestDto.birthDate),
-        createdBy: userId
-      }
-    })
-    return {
-      success: true
+    const entry = await Entry.create({
+      ...dto,
+      birthDate: new Date(dto.birthDate),
+      createdBy: userId,
+    });
+    if (!entry) {
+      return {
+        success: false,
+        message: "Server error",
+      };
     }
+    return {
+      success: true,
+    };
   } catch (e) {
     throw e;
   }
-}
-
+};
 
 export default { createEntry };

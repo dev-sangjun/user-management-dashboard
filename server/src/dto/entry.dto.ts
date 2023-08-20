@@ -6,5 +6,6 @@ export interface UserEntryRequestDto {
   lastName: string;
   birthDate: Date;
   status: UserStatus;
-  address: string;
+  address: string[];
+  other: {};
 }
