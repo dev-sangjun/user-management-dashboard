@@ -1,3 +1,3 @@
 import authController from "./auth.controller";
-
-export { authController };
+import entryController from "./entry.controller";
+export { authController, entryController};

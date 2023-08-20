@@ -21,6 +21,7 @@ export const authMiddleware = (
   try {
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY!;
     const payload = jwt.verify(token, JWT_SECRET_KEY) as { userId: string };
+    console.log("payload", payload);
     (req as AuthorizedRequest).authorizedUserId = payload.userId;
     next();
   } catch (e) {

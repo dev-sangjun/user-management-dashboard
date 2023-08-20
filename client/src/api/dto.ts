@@ -1,3 +1,5 @@
+import { UserStatus } from "../global/types";
+
 // common
 export interface OperationResponseDto {
   success: boolean;
@@ -12,4 +14,14 @@ export interface UserAuthRequestDto {
 
 export interface UserSignInResponseDto {
   userId: string;
+}
+
+// entry
+export interface UserEntryRequestDto {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  birthDate: Date;
+  status: UserStatus;
+  address: string;
 }
