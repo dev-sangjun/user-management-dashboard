@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AppDispatch, RootState } from "../../store";
 import { closeModal, getModalType } from "../../store/modal.reducer";
 import useEntryForm from "./useEntryForm";
@@ -9,48 +9,24 @@ import { asyncFetchEntries } from "../../store/entry.reducer";
 import { useSelector } from "react-redux";
 import { USER_ENTRY_FIELD_NAMES } from "../../global/constants";
 
-const ADDITIONAL_INPUT_NAME_PREFIX = "additional";
-
 const EntryFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const modalType = useSelector((state: RootState) => getModalType(state));
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { registerers, handleSubmit, reset } = useEntryForm();
-  const [additionalInputCount, setAdditionalInputCount] = useState(0);
   const onSubmit = handleSubmit(async data => {
-    if (formRef.current) {
-      const additionalInputObj: { [key: string]: string } = {};
-      const additionalInputList = Object.values(formRef.current)
-        .filter(
-          element =>
-            element instanceof HTMLInputElement &&
-            element.name.includes(ADDITIONAL_INPUT_NAME_PREFIX)
-        )
-        .map((element: HTMLInputElement) => element.value);
-      // Go through additionalInputList, use elements at even idx as field keys & odd idx as field values
-      // Only add valid key-value pairs to additionalInputObj
-      additionalInputList.forEach((_, idx) => {
-        if (idx % 2 === 1) {
-          const fieldKey = additionalInputList[idx - 1];
-          const fieldValue = additionalInputList[idx];
-          if (fieldKey && fieldValue) {
-            additionalInputObj[fieldKey] = fieldValue;
-          }
-        }
+    try {
+      await entryAPI.addEntry({
+        ...data,
+        other: {},
+        address: data.address.split("\n"),
       });
-      try {
-        await entryAPI.addEntry({
-          ...data,
-          other: additionalInputObj,
-          address: data.address.split("\n"),
-        });
-        reset();
-        await dispatch(asyncFetchEntries());
-        dispatch(closeModal());
-      } catch (e) {
-        console.error(e);
-      }
+      reset();
+      await dispatch(asyncFetchEntries());
+      dispatch(closeModal());
+    } catch (e) {
+      console.error(e);
     }
   });
   const renderInputs = () => {
@@ -111,24 +87,24 @@ const EntryFormModal = () => {
       }
     });
   };
-  const renderAdditionalInputs = () => {
-    return Array(additionalInputCount)
-      .fill(0)
-      .map((_, idx) => (
-        <div key={idx} className="flex gap-2">
-          <input
-            name={`${ADDITIONAL_INPUT_NAME_PREFIX}-key-${idx}`}
-            className="input input-sm input-bordered text-[16px] w-1/3"
-            placeholder="Field Name"
-          />
-          <input
-            name={`${ADDITIONAL_INPUT_NAME_PREFIX}-value-${idx}`}
-            className="input input-sm input-bordered w-full text-[16px]"
-            placeholder="Field Value"
-          />
-        </div>
-      ));
-  };
+  // const renderAdditionalInputs = () => {
+  //   return Array(additionalInputCount)
+  //     .fill(0)
+  //     .map((_, idx) => (
+  //       <div key={idx} className="flex gap-2">
+  //         <input
+  //           name={`${ADDITIONAL_INPUT_NAME_PREFIX}-key-${idx}`}
+  //           className="input input-sm input-bordered text-[16px] w-1/3"
+  //           placeholder="Field Name"
+  //         />
+  //         <input
+  //           name={`${ADDITIONAL_INPUT_NAME_PREFIX}-value-${idx}`}
+  //           className="input input-sm input-bordered w-full text-[16px]"
+  //           placeholder="Field Value"
+  //         />
+  //       </div>
+  //     ));
+  // };
   useEffect(() => {
     if (dialogRef.current) {
       if (modalType === "ENTRY_FORM") {
@@ -148,14 +124,6 @@ const EntryFormModal = () => {
       >
         <h3 className="font-bold text-lg">User Data Entry Form</h3>
         {renderInputs()}
-        {renderAdditionalInputs()}
-        <button
-          type="button"
-          className="btn btn-sm btn-link normal-case no-underline hover:no-underline"
-          onClick={() => setAdditionalInputCount(prev => prev + 1)}
-        >
-          +
-        </button>
         <div className="flex mx-auto">
           <button
             type="button"

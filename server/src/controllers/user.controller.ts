@@ -14,4 +14,17 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { getUser };
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  const { authorizedUserId } = req as AuthorizedRequest;
+  try {
+    const { success, message } = await userService.updateUserById(
+      authorizedUserId,
+      req.body
+    );
+    return res.json({ success, message });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export default { getUser, updateUser };

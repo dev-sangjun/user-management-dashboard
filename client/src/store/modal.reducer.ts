@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 
-type ModalType = "ENTRY_FORM" | "ENTRY_VIEW" | null;
+type ModalType = "ENTRY_FORM" | "ENTRY_VIEW" | "CUSTOM_FIELDS_FORM" | null;
 
 interface ModalState {
   modalType: ModalType;

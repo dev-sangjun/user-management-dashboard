@@ -4,6 +4,7 @@ import { getModalType } from "../store/modal.reducer";
 import EntryFormModal from "./EntryFormModal";
 import EntryViewModal from "./EntryViewModal";
 import { getSelectedEntry } from "../store/entry.reducer";
+import CustomFieldsFormModal from "./CustomFieldsFormModal";
 
 const Modal = () => {
   const modalType = useSelector((state: RootState) => getModalType(state));
@@ -15,6 +16,8 @@ const Modal = () => {
       return <EntryFormModal />;
     case "ENTRY_VIEW":
       return <EntryViewModal entry={selectedEntry} />;
+    case "CUSTOM_FIELDS_FORM":
+      return <CustomFieldsFormModal />;
     default:
       return null;
   }

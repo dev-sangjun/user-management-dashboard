@@ -1,5 +1,12 @@
 import { UserStatus } from "./types";
 
+export type CustomFields = { string: string | number };
+
+export interface IUser {
+  id: string;
+  customFields?: CustomFields;
+}
+
 export interface IEntry {
   _id: string;
   firstName: string;
@@ -8,5 +15,5 @@ export interface IEntry {
   birthDate: Date;
   status: UserStatus;
   address: string[];
-  other: { string: string | number };
+  other: CustomFields;
 }

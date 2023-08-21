@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 import userAPI from "../api/user.api";
+import { CustomFields } from "../global/entity.types";
 
 interface UserState {
   userId: string | null;
+  customFields?: CustomFields;
 }
 
 const initialState: UserState = {
@@ -14,17 +16,18 @@ export const asyncFetchUser = createAsyncThunk(
   "user/asyncFetchUser",
   async () => {
     const user = await userAPI.fetchUser();
-    return user.id;
-  },
+    return user;
+  }
 );
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(asyncFetchUser.fulfilled, (state, action) => {
-      state.userId = action.payload;
+      state.userId = action.payload.id;
+      state.customFields = action.payload.customFields;
     });
   },
 });

@@ -3,10 +3,11 @@ import bcrypt from "bcryptjs";
 
 const Schema = mongoose.Schema;
 
-interface IUser {
+export type CustomFields = { [key: string]: string };
+export interface IUser {
   email: string;
   password: string;
-  customFields: { [key: string]: string };
+  customFields: CustomFields;
 }
 
 const UserSchema = new Schema<IUser>({
