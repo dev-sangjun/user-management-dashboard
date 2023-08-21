@@ -16,7 +16,7 @@ const Table = () => {
   const renderEntries = () => {
     return entries.map(entry => {
       // skip table data for fields in skipFieldList
-      const skipFieldList = ["_id"];
+      const skipFieldList = ["_id", "other"];
       const formatValue = (key: string, value: string | string[]) => {
         if (key === "birthDate") {
           return moment(value).format("MM/DD/YYYY");

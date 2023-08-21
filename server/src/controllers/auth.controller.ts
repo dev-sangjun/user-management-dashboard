@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { authService } from "../services";
 import { UserAuthRequestDto } from "../dto/user.auth.dto";
-import { OperationResponseDto } from "../dto/common.dto";
 
 const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
   const userAuthRequestDto: UserAuthRequestDto = req.body;

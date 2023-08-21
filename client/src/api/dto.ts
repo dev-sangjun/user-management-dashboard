@@ -24,4 +24,5 @@ export interface UserEntryRequestDto {
   birthDate: Date;
   status: UserStatus;
   address: string[];
+  other: { [key: string]: string };
 }

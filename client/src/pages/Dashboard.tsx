@@ -1,12 +1,15 @@
 import { useDispatch } from "react-redux";
 import Table from "../components/Table";
-import { AppDispatch } from "../store";
-import { openModal } from "../store/modal.reducer";
+import { AppDispatch, RootState } from "../store";
+import { isModalOpen, openModal } from "../store/modal.reducer";
 import { useEffect } from "react";
 import { asyncFetchEntries } from "../store/entry.reducer";
+import Modal from "../components/Modal";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const isOpen = useSelector((state: RootState) => isModalOpen(state));
   const handleAddBtnClick = () => {
     dispatch(openModal());
   };
@@ -22,6 +25,7 @@ const Dashboard = () => {
         Add
       </button>
       <Table />
+      {isOpen && <Modal />}
     </div>
   );
 };
