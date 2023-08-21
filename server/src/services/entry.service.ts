@@ -29,7 +29,7 @@ const getEntries = async (userId: string): Promise<IEntry[]> => {
   try {
     const entries = await Entry.find({
       createdBy: userId,
-    });
+    }).select("-__v -createdBy");
     return entries;
   } catch (e) {
     throw e;

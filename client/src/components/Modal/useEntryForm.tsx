@@ -54,7 +54,6 @@ const useEntryForm = () => {
   };
   const onSubmit = handleSubmit(async data => {
     try {
-      console.log(data);
       await entryAPI.addEntry({
         ...data,
         address: data.address.split("\n"),
