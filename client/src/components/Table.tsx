@@ -18,9 +18,12 @@ const Table = () => {
       // skip table data for fields in skipFieldList
       // TODO: skip these from the server
       const skipFieldList = ["_id", "createdBy", "__v"];
-      const formatValue = (key: string, value: string) => {
+      const formatValue = (key: string, value: string | string[]) => {
         if (key === "birthDate") {
           return moment(value).format("MM/DD/YYYY");
+        }
+        if (value instanceof Array) {
+          return value.join("\n");
         }
         return value;
       };
@@ -30,7 +33,10 @@ const Table = () => {
             {Object.entries(entry)
               .filter(([key]) => !skipFieldList.includes(key))
               .map(([key, value]) => (
-                <td key={key} className="p-4 bg-white text-slate-500">
+                <td
+                  key={key}
+                  className="p-4 bg-white text-slate-500 whitespace-pre"
+                >
                   {formatValue(key, value)}
                 </td>
               ))}

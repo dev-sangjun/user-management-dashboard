@@ -54,7 +54,11 @@ const useEntryForm = () => {
   };
   const onSubmit = handleSubmit(async data => {
     try {
-      await entryAPI.addEntry(data);
+      console.log(data);
+      await entryAPI.addEntry({
+        ...data,
+        address: data.address.split("\n"),
+      });
       reset();
       await dispatch(asyncFetchEntries());
       dispatch(closeModal());
