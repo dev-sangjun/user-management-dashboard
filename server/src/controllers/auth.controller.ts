@@ -17,7 +17,7 @@ const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
 const signInUser = async (req: Request, res: Response, next: NextFunction) => {
   const userAuthRequestDto: UserAuthRequestDto = req.body;
   try {
-    const { accessToken, userId } = await authService.signInUser(
+    const { accessToken, userId, customFields } = await authService.signInUser(
       userAuthRequestDto
     );
     return res
@@ -25,7 +25,7 @@ const signInUser = async (req: Request, res: Response, next: NextFunction) => {
         httpOnly: true, // disable access from external scripts
         sameSite: true,
       })
-      .json({ userId });
+      .json({ userId, customFields });
   } catch (e) {
     return next(e);
   }

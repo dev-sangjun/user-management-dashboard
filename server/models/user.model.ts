@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 interface IUser {
   email: string;
   password: string;
+  customFields: { [key: string]: string };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -13,7 +14,14 @@ const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
-  password: String,
+  password: {
+    type: String,
+    required: true,
+  },
+  customFields: {
+    type: Schema.Types.Map,
+    of: Schema.Types.String,
+  },
 });
 
 UserSchema.pre("save", function (next) {

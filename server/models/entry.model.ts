@@ -10,7 +10,7 @@ export interface IEntry {
   birthDate: Date;
   status: UserStatus;
   address: string[];
-  other: { string: string | number };
+  other: { [key: string]: string | number };
   createdBy: ObjectId;
 }
 

@@ -43,7 +43,11 @@ const createUser = async (
 
 const signInUser = async (
   userAuthRequestDto: UserAuthRequestDto
-): Promise<{ accessToken: string; userId: string }> => {
+): Promise<{
+  accessToken: string;
+  userId: string;
+  customFields: { [key: string]: string };
+}> => {
   const { email, password } = userAuthRequestDto;
   const user = await User.findOne({ email });
   if (!user) {
@@ -66,6 +70,7 @@ const signInUser = async (
   return {
     accessToken,
     userId: user._id.toString(),
+    customFields: user.customFields,
   };
 };
 

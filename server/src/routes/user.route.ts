@@ -1,13 +1,7 @@
 import { Router } from "express";
-import { AuthorizedRequest } from "../middlewares/auth.middleware";
+import userController from "../controllers/user.controller";
 
 const userRoute = Router();
-userRoute.get("/", (req, res) => {
-  const { authorizedUserId } = req as AuthorizedRequest;
-  return res.json({
-    id: authorizedUserId
-  })
-});
-
+userRoute.get("/", userController.getUser);
 
 export default userRoute;
