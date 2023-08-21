@@ -25,7 +25,7 @@ const Table = () => {
         return value;
       };
       return (
-        <tbody>
+        <tbody key={entry._id}>
           <tr className="border-b border-b-slate-300">
             {Object.entries(entry)
               .filter(([key]) => !skipFieldList.includes(key))

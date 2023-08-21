@@ -12,6 +12,7 @@ const Modal = () => {
   const isOpen = useSelector((state: RootState) => isModalOpen(state));
   const { registerers, onSubmit } = useEntryForm();
   const renderInputs = () => {
+    // render different HTML elements based on registerer name
     const getInputType = (registererName: string) => {
       switch (registererName) {
         case "birthDate":
@@ -30,10 +31,11 @@ const Modal = () => {
               key={idx}
               name="status"
               className="select select-bordered"
+              defaultValue={USER_STATUS[0]}
               {...registerer}
             >
               {USER_STATUS.map(status => (
-                <option key={status} value={status} selected={idx === 0}>
+                <option key={status} value={status}>
                   {status}
                 </option>
               ))}

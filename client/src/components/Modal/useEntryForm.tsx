@@ -37,9 +37,7 @@ const useEntryForm = () => {
     firstName: register("firstName", {
       required: "First name is required.",
     }),
-    middleName: register("middleName", {
-      required: "Middle name is required.",
-    }),
+    middleName: register("middleName"),
     lastName: register("lastName", {
       required: "Last name is required.",
     }),
