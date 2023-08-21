@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { AppDispatch, RootState } from "../../store";
-import { closeModal, isModalOpen } from "../../store/modal.reducer";
+import { closeModal, getModalType } from "../../store/modal.reducer";
 import useEntryForm from "./useEntryForm";
 import { USER_STATUS } from "../../global/types";
 import { useDispatch } from "react-redux";
 import entryAPI from "../../api/entry.api";
 import { asyncFetchEntries } from "../../store/entry.reducer";
 import { useSelector } from "react-redux";
+import { USER_ENTRY_FIELD_NAMES } from "../../global/constants";
 
 const ADDITIONAL_INPUT_NAME_PREFIX = "additional";
 
-const Modal = () => {
+const EntryFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const isOpen = useSelector((state: RootState) => isModalOpen(state));
+  const modalType = useSelector((state: RootState) => getModalType(state));
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { registerers, handleSubmit, reset } = useEntryForm();
@@ -89,7 +90,9 @@ const Modal = () => {
               name="address"
               rows={5}
               className="textarea textarea-bordered"
-              placeholder="address"
+              placeholder={
+                USER_ENTRY_FIELD_NAMES?.[registerer.name] || "Address"
+              }
               {...registerer}
             />
           );
@@ -99,7 +102,9 @@ const Modal = () => {
               key={idx}
               type={getInputType(registerer.name)}
               className="input input-sm input-bordered w-full text-[16px]"
-              placeholder={registerer.name}
+              placeholder={
+                USER_ENTRY_FIELD_NAMES?.[registerer.name] || registerer.name
+              }
               {...registerer}
             />
           );
@@ -126,13 +131,13 @@ const Modal = () => {
   };
   useEffect(() => {
     if (dialogRef.current) {
-      if (isOpen) {
+      if (modalType === "ENTRY_FORM") {
         dialogRef.current.showModal();
       } else {
         dialogRef.current.close();
       }
     }
-  }, [isOpen]);
+  }, [modalType]);
   return (
     <dialog className="modal" ref={dialogRef}>
       <form
@@ -168,4 +173,4 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default EntryFormModal;

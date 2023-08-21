@@ -1,41 +1,32 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import { getEntries } from "../store/entry.reducer";
-import moment from "moment";
+import { AppDispatch, RootState } from "../store";
+import { getEntries, selectEntry } from "../store/entry.reducer";
+import { useDispatch } from "react-redux";
+import { openModal } from "../store/modal.reducer";
+import { USER_ENTRY_DEFAULT_FIELDS } from "../global/constants";
+import { formatValue } from "../utils/entry.utils";
 
 const Table = () => {
-  const fields = [
-    "First Name",
-    "Middle Name",
-    "Last Name",
-    "Birth Date",
-    "Status",
-    "Address",
-  ];
+  const dispatch = useDispatch<AppDispatch>();
   const entries = useSelector((state: RootState) => getEntries(state));
   const renderEntries = () => {
     return entries.map(entry => {
       // skip table data for fields in skipFieldList
       const skipFieldList = ["_id", "other"];
-      const formatValue = (key: string, value: string | string[]) => {
-        if (key === "birthDate") {
-          return moment(value).format("MM/DD/YYYY");
-        }
-        if (value instanceof Array) {
-          return value.join("\n");
-        }
-        return value;
-      };
       return (
-        <tbody key={entry._id}>
+        <tbody
+          key={entry._id}
+          className="cursor-pointer bg-white hover:bg-slate-100"
+          onClick={() => {
+            dispatch(selectEntry(entry));
+            dispatch(openModal("ENTRY_VIEW"));
+          }}
+        >
           <tr className="border-b border-b-slate-300">
             {Object.entries(entry)
               .filter(([key]) => !skipFieldList.includes(key))
               .map(([key, value]) => (
-                <td
-                  key={key}
-                  className="p-4 bg-white text-slate-500 whitespace-pre"
-                >
+                <td key={key} className="p-4 text-slate-500 whitespace-pre">
                   {formatValue(key, value)}
                 </td>
               ))}
@@ -49,7 +40,7 @@ const Table = () => {
       <table className="w-full">
         <tbody>
           <tr className="border-b border-b-slate-300">
-            {fields.map(field => (
+            {USER_ENTRY_DEFAULT_FIELDS.map(field => (
               <th key={field} className="p-4 bg-teal-700 text-white text-left">
                 {field}
               </th>

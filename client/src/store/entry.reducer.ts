@@ -5,6 +5,7 @@ import entryAPI from "../api/entry.api";
 
 interface EntryState {
   entries: IEntry[];
+  selectedEntry?: IEntry;
 }
 
 const initialState: EntryState = {
@@ -22,7 +23,14 @@ export const asyncFetchEntries = createAsyncThunk(
 const entrySlice = createSlice({
   name: "entry",
   initialState,
-  reducers: {},
+  reducers: {
+    selectEntry: (state, action: PayloadAction<IEntry>) => {
+      state.selectedEntry = action.payload;
+    },
+    deselectEntry: state => {
+      state.selectedEntry = undefined;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(
       asyncFetchEntries.fulfilled,
@@ -34,5 +42,10 @@ const entrySlice = createSlice({
 });
 
 export const getEntries = (state: RootState) => state.entryReducer.entries;
+
+export const getSelectedEntry = (state: RootState) =>
+  state.entryReducer.selectedEntry;
+
+export const { selectEntry } = entrySlice.actions;
 
 export default entrySlice.reducer;
