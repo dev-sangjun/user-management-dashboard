@@ -1,23 +1,68 @@
 import { useEffect, useRef } from "react";
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { useSelector } from "react-redux";
-import { isModalOpen } from "../../store/modal.reducer";
+import { closeModal, isModalOpen } from "../../store/modal.reducer";
 import useEntryForm from "./useEntryForm";
+import { USER_STATUS } from "../../global/types";
+import { useDispatch } from "react-redux";
 
 const Modal = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const isOpen = useSelector((state: RootState) => isModalOpen(state));
   const { registerers, onSubmit } = useEntryForm();
-  const renderInputs = () =>
-    Object.values(registerers).map((registerer, idx) => (
-      <input
-        key={idx}
-        type={registerer.name === "birthDate" ? "date" : "text"}
-        className="input input-sm input-bordered w-full text-[16px]"
-        placeholder={registerer.name}
-        {...registerer}
-      />
-    ));
+  const renderInputs = () => {
+    const getInputType = (registererName: string) => {
+      switch (registererName) {
+        case "birthDate":
+          return "date";
+        case "address":
+          return "textarea";
+        default:
+          return "text";
+      }
+    };
+    return Object.values(registerers).map((registerer, idx) => {
+      switch (registerer.name) {
+        case "status":
+          return (
+            <select
+              key={idx}
+              name="status"
+              className="select select-bordered"
+              {...registerer}
+            >
+              {USER_STATUS.map(status => (
+                <option key={status} value={status} selected={idx === 0}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          );
+        case "address":
+          return (
+            <textarea
+              key={idx}
+              name="address"
+              rows={5}
+              className="textarea textarea-bordered"
+              placeholder="address"
+              {...registerer}
+            />
+          );
+        default:
+          return (
+            <input
+              key={idx}
+              type={getInputType(registerer.name)}
+              className="input input-sm input-bordered w-full text-[16px]"
+              placeholder={registerer.name}
+              {...registerer}
+            />
+          );
+      }
+    });
+  };
   useEffect(() => {
     if (dialogRef.current) {
       if (isOpen) {
@@ -38,7 +83,10 @@ const Modal = () => {
           <h3 className="font-bold text-lg">User Data Entry Form</h3>
           {renderInputs()}
           <div className="flex mx-auto">
-            <button className="btn btn-sm btn-link normal-case no-underline text-slate-500">
+            <button
+              className="btn btn-sm btn-link normal-case no-underline text-slate-500"
+              onClick={() => dispatch(closeModal())}
+            >
               Close
             </button>
             <button className="btn btn-sm btn-primary normal-case no-underline">

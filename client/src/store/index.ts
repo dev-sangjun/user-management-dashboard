@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
+import entryReducer from "./entry.reducer";
 import modalReducer from "./modal.reducer";
 import userReducer from "./user.reducer";
 
 export const store = configureStore({
   reducer: {
+    entryReducer,
     modalReducer,
     userReducer,
   },

@@ -17,4 +17,14 @@ const createEntry = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { createEntry };
+const getEntries = async (req: Request, res: Response, next: NextFunction) => {
+  const { authorizedUserId } = req as AuthorizedRequest;
+  try {
+    const entries = await entryService.getEntries(authorizedUserId);
+    return res.json(entries);
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export default { createEntry, getEntries };

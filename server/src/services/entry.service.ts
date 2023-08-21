@@ -25,4 +25,15 @@ const createEntry = async (
   }
 };
 
-export default { createEntry };
+const getEntries = async (userId: string): Promise<IEntry[]> => {
+  try {
+    const entries = await Entry.find({
+      createdBy: userId,
+    });
+    return entries;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export default { createEntry, getEntries };

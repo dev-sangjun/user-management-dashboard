@@ -1,9 +1,10 @@
 import { UseFormRegisterReturn, useForm } from "react-hook-form";
-import { UserStatus } from "../../global/types";
+import { UserStatus, isUserStatus } from "../../global/types";
 import entryAPI from "../../api/entry.api";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { closeModal } from "../../store/modal.reducer";
+import { asyncFetchEntries } from "../../store/entry.reducer";
 
 interface FormValues {
   firstName: string;
@@ -47,6 +48,7 @@ const useEntryForm = () => {
     }),
     status: register("status", {
       required: "Status is required.",
+      validate: value => isUserStatus(value),
     }),
     address: register("address", {
       required: "Address is required.",
@@ -55,6 +57,8 @@ const useEntryForm = () => {
   const onSubmit = handleSubmit(async data => {
     try {
       await entryAPI.addEntry(data);
+      reset();
+      await dispatch(asyncFetchEntries());
       dispatch(closeModal());
     } catch (e) {
       console.error(e);
