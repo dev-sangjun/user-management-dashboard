@@ -10,7 +10,7 @@ export interface IEntry {
   birthDate: string;
   status: UserStatus;
   address: string[];
-  other: { [key: string]: string | number };
+  other: { [key: string]: string };
   createdBy: ObjectId;
 }
 
@@ -43,7 +43,7 @@ const EntrySchema = new Schema<IEntry>({
   ],
   other: {
     type: Schema.Types.Map,
-    of: Schema.Types.Mixed,
+    of: Schema.Types.String,
   },
   createdBy: {
     type: Schema.Types.ObjectId,
