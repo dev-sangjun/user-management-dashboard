@@ -1,6 +1,7 @@
 # User Management Dashboard
 - A dashboard app to manage patients' data
 ## About the Project
+FYI: .env was intentionally pushed for testing purposes. In production environment, .env should always be hidden from outside users.
 - This project supports the following features:
 	1. Sign up & sign in using jwt
   2. Add custom fields for patient entry on initial load (if not setup yet)
@@ -16,12 +17,13 @@
   5. Admin users can view patient details by clicking on the data row, which opens up a User Data Entry modal
 
 - Some improvements that can be made in the future:
-	1. Add pagination/filter to reduce the amount of transferred data as this app scales
+  1. Add pagination/filter to reduce the amount of transferred data as this app scales
   2. Support multiple data types in MongoDB models; this app currently saves all values as string for simplicity
   3. Support searches for entries that contain the keyword; this app currently filters by exact matches of the queries
   4. Data validation (emails, password length, etc.)
   5. Sign out feature
   6. Better UX (more user-friendly messages for any errors and server responses)
+  7. Run the client side on the browser; this app currently runs React in a separate port, so I whitelisted the port to bypass CORS policy
 
 ## Built With
 ### Tech Stack
@@ -41,6 +43,8 @@
 - Download the repo
 - Run "npm i" in /client and /server directories to download npm packages
 - Run "npm run dev" in the root directory, which will trigger "npm run dev" in /client and /server directories
+- The server will run at http://localhost:5000, and the client will run at http://localhost:5173
+- Open a browser and go to http://localhost:5173
 
 ## Getting Started
 1. Sign up your account with your email & password
