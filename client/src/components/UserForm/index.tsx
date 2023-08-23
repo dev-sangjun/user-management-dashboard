@@ -54,7 +54,7 @@ const UserForm = () => {
     } else {
       try {
         await authAPI.signUp(data);
-        dispatch(asyncFetchUser());
+        setIsSignIn(true);
       } catch (e) {
         setAlertErrorMessages([]);
       }

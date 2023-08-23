@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import userAPI from "../api/user.api";
 import { asyncFetchUser } from "../store/user.reducer";
 import { CustomFields } from "../global/entity.types";
-import { asyncFetchEntries } from "../store/entry.reducer";
 import { ADDITIONAL_INPUT_NAME_PREFIX } from "../global/constants";
 
 const CustomFieldsFormModal = () => {
@@ -51,7 +50,7 @@ const CustomFieldsFormModal = () => {
       });
       try {
         await userAPI.updateCustomFields(additionalInputObj);
-        await dispatch(asyncFetchEntries());
+        await dispatch(asyncFetchUser());
         dispatch(closeModal());
       } catch (e) {
         console.error(e);
