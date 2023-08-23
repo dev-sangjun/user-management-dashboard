@@ -35,7 +35,6 @@ const Table = () => {
       );
     });
   };
-  console.log(USER_ENTRY_DEFAULT_FIELDS);
   return (
     <div className="w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
       <table className="w-full">

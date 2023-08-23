@@ -1,0 +1,11 @@
+{
+  "name": "user-management-dashboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/dev-sangjun/user-management-dashboard.git",
+  "author": "dev-sangjun <33212292+dev-sangjun@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "cd client && npm run dev & cd server && npm run dev"
+  }
+}
