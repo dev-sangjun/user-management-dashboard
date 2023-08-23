@@ -7,7 +7,7 @@ export interface IEntry {
   firstName: string;
   middleName?: string;
   lastName: string;
-  birthDate: Date;
+  birthDate: string;
   status: UserStatus;
   address: string[];
   other: { [key: string]: string | number };
@@ -28,7 +28,7 @@ const EntrySchema = new Schema<IEntry>({
     required: true,
   },
   birthDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   status: {

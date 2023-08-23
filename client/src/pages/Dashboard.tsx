@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { asyncFetchEntries } from "../store/entry.reducer";
 import { useSelector } from "react-redux";
 import { getUser } from "../store/user.reducer";
+import SearchBar from "../components/SearchBar";
 
 const Dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,19 +16,19 @@ const Dashboard = () => {
   };
   useEffect(() => {
     if (user.customFields) {
-      dispatch(asyncFetchEntries());
+      dispatch(asyncFetchEntries({}));
     } else {
       dispatch(openModal("CUSTOM_FIELDS_FORM"));
     }
   }, [user, dispatch]);
   return (
     <div className="flex flex-col justify-center items-center p-32 gap-2 w-full h-full bg-slate-200">
-      <button
-        className="btn btn-sm btn-primary ml-auto"
-        onClick={handleAddBtnClick}
-      >
-        Add
-      </button>
+      <div className="w-full flex gap-2 justify-between">
+        <SearchBar />
+        <button className="btn btn-sm btn-primary" onClick={handleAddBtnClick}>
+          Add
+        </button>
+      </div>
       <Table />
     </div>
   );

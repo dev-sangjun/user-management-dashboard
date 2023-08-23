@@ -58,7 +58,7 @@ const EntryFormModal = () => {
           address: data.address.split("\n"),
         });
         reset();
-        await dispatch(asyncFetchEntries());
+        await dispatch(asyncFetchEntries({}));
         dispatch(closeModal());
       } catch (e) {
         console.error(e);
