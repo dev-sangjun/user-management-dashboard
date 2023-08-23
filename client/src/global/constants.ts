@@ -1,3 +1,14 @@
+export const ADDITIONAL_INPUT_NAME_PREFIX = "additional";
+
+export const USER_ENTRY_DEFAULT_KEYS = [
+  "firstName",
+  "middleName",
+  "lastName",
+  "birthDate",
+  "status",
+  "address",
+];
+
 export const USER_ENTRY_DEFAULT_FIELDS = [
   "First Name",
   "Middle Name",

@@ -1,6 +1,6 @@
 import { UserStatus } from "./types";
 
-export type CustomFields = { string: string | number };
+export type CustomFields = { [key: string]: string };
 
 export interface IUser {
   id: string;

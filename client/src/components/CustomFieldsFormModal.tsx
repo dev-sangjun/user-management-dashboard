@@ -5,12 +5,14 @@ import { closeModal, getModalType } from "../store/modal.reducer";
 import { useDispatch } from "react-redux";
 import userAPI from "../api/user.api";
 import { asyncFetchUser } from "../store/user.reducer";
-
-const ADDITIONAL_INPUT_NAME_PREFIX = "additional";
+import { CustomFields } from "../global/entity.types";
+import { asyncFetchEntries } from "../store/entry.reducer";
+import { ADDITIONAL_INPUT_NAME_PREFIX } from "../global/constants";
 
 const CustomFieldsFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [additionalInputCount, setAdditionalInputCount] = useState(0);
   const handleClose = async () => {
     try {
@@ -25,41 +27,37 @@ const CustomFieldsFormModal = () => {
       dispatch(closeModal());
     }
   };
-  // const onSubmit = handleSubmit(async data => {
-  //   if (formRef.current) {
-  //     const additionalInputObj: { [key: string]: string } = {};
-  //     const additionalInputList = Object.values(formRef.current)
-  //       .filter(
-  //         element =>
-  //           element instanceof HTMLInputElement &&
-  //           element.name.includes(ADDITIONAL_INPUT_NAME_PREFIX)
-  //       )
-  //       .map((element: HTMLInputElement) => element.value);
-  //     // Go through additionalInputList, use elements at even idx as field keys & odd idx as field values
-  //     // Only add valid key-value pairs to additionalInputObj
-  //     additionalInputList.forEach((_, idx) => {
-  //       if (idx % 2 === 1) {
-  //         const fieldKey = additionalInputList[idx - 1];
-  //         const fieldValue = additionalInputList[idx];
-  //         if (fieldKey && fieldValue) {
-  //           additionalInputObj[fieldKey] = fieldValue;
-  //         }
-  //       }
-  //     });
-  //     try {
-  //       await entryAPI.addEntry({
-  //         ...data,
-  //         other: additionalInputObj,
-  //         address: data.address.split("\n"),
-  //       });
-  //       reset();
-  //       await dispatch(asyncFetchEntries());
-  //       dispatch(closeModal());
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   }
-  // });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formRef.current) {
+      const additionalInputObj: CustomFields = {};
+      const additionalInputList = Object.values(formRef.current)
+        .filter(
+          element =>
+            element instanceof HTMLInputElement &&
+            element.name.includes(ADDITIONAL_INPUT_NAME_PREFIX)
+        )
+        .map((element: HTMLInputElement) => element.value);
+      // Go through additionalInputList, use elements at even idx as field keys & odd idx as field values
+      // Only add valid key-value pairs to additionalInputObj
+      additionalInputList.forEach((_, idx) => {
+        if (idx % 2 === 1) {
+          const fieldKey = additionalInputList[idx - 1];
+          const fieldValue = additionalInputList[idx];
+          if (fieldKey && fieldValue) {
+            additionalInputObj[fieldKey] = fieldValue;
+          }
+        }
+      });
+      try {
+        await userAPI.updateCustomFields(additionalInputObj);
+        await dispatch(asyncFetchEntries());
+        dispatch(closeModal());
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
   const renderAdditionalInputs = () => {
     return Array(additionalInputCount)
       .fill(0)
@@ -90,7 +88,11 @@ const CustomFieldsFormModal = () => {
   }, [modalType]);
   return (
     <dialog className="modal" ref={dialogRef}>
-      <form className="modal-box flex flex-col gap-2 ">
+      <form
+        className="modal-box flex flex-col gap-2"
+        ref={formRef}
+        onSubmit={handleSubmit}
+      >
         <h3 className="font-bold text-lg">Custom Fields Form</h3>
         {renderAdditionalInputs()}
         <button
@@ -108,13 +110,7 @@ const CustomFieldsFormModal = () => {
           >
             Close
           </button>
-          <button
-            type="button"
-            className="btn btn-sm btn-primary normal-case"
-            onClick={() => dispatch(closeModal())}
-          >
-            Add
-          </button>
+          <button className="btn btn-sm btn-primary normal-case">Add</button>
         </div>
       </form>
     </dialog>

@@ -18,7 +18,6 @@ const updateUserById = async (
   data: IUser
 ): Promise<OperationResponseDto> => {
   const user = await User.findByIdAndUpdate(userId, data);
-  console.log(data);
   if (!user) {
     throw new EntityNotFoundError();
   }

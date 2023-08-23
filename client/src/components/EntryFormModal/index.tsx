@@ -7,26 +7,62 @@ import { useDispatch } from "react-redux";
 import entryAPI from "../../api/entry.api";
 import { asyncFetchEntries } from "../../store/entry.reducer";
 import { useSelector } from "react-redux";
-import { USER_ENTRY_FIELD_NAMES } from "../../global/constants";
+import {
+  USER_ENTRY_DEFAULT_KEYS,
+  USER_ENTRY_FIELD_NAMES,
+} from "../../global/constants";
+import { getUser } from "../../store/user.reducer";
+import { CustomFields } from "../../global/entity.types";
 
 const EntryFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const modalType = useSelector((state: RootState) => getModalType(state));
+  const customFields = useSelector(
+    (state: RootState) => getUser(state).customFields
+  );
+  const renderCustomFields = () => {
+    if (!customFields) {
+      return null;
+    }
+    return Object.entries(customFields).map(([key, value]) => {
+      return (
+        <input
+          key={key}
+          name={key}
+          className="input input-sm input-bordered w-full text-[16px]"
+          type={value}
+          placeholder={key}
+        />
+      );
+    });
+  };
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { registerers, handleSubmit, reset } = useEntryForm();
   const onSubmit = handleSubmit(async data => {
-    try {
-      await entryAPI.addEntry({
-        ...data,
-        other: {},
-        address: data.address.split("\n"),
-      });
-      reset();
-      await dispatch(asyncFetchEntries());
-      dispatch(closeModal());
-    } catch (e) {
-      console.error(e);
+    if (formRef.current) {
+      const additionalInputObj: CustomFields = {};
+      Object.values(formRef.current)
+        .filter(
+          element =>
+            element instanceof HTMLInputElement &&
+            !USER_ENTRY_DEFAULT_KEYS.includes(element.name)
+        )
+        .forEach((element: HTMLInputElement) => {
+          additionalInputObj[element.name] = element.value;
+        });
+      try {
+        await entryAPI.addEntry({
+          ...data,
+          other: additionalInputObj,
+          address: data.address.split("\n"),
+        });
+        reset();
+        await dispatch(asyncFetchEntries());
+        dispatch(closeModal());
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
   const renderInputs = () => {
@@ -87,24 +123,6 @@ const EntryFormModal = () => {
       }
     });
   };
-  // const renderAdditionalInputs = () => {
-  //   return Array(additionalInputCount)
-  //     .fill(0)
-  //     .map((_, idx) => (
-  //       <div key={idx} className="flex gap-2">
-  //         <input
-  //           name={`${ADDITIONAL_INPUT_NAME_PREFIX}-key-${idx}`}
-  //           className="input input-sm input-bordered text-[16px] w-1/3"
-  //           placeholder="Field Name"
-  //         />
-  //         <input
-  //           name={`${ADDITIONAL_INPUT_NAME_PREFIX}-value-${idx}`}
-  //           className="input input-sm input-bordered w-full text-[16px]"
-  //           placeholder="Field Value"
-  //         />
-  //       </div>
-  //     ));
-  // };
   useEffect(() => {
     if (dialogRef.current) {
       if (modalType === "ENTRY_FORM") {
@@ -124,6 +142,7 @@ const EntryFormModal = () => {
       >
         <h3 className="font-bold text-lg">User Data Entry Form</h3>
         {renderInputs()}
+        {renderCustomFields()}
         <div className="flex mx-auto">
           <button
             type="button"
