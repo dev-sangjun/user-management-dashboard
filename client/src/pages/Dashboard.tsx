@@ -25,7 +25,10 @@ const Dashboard = () => {
     <div className="flex flex-col justify-center items-center p-32 gap-2 w-full h-full bg-slate-200">
       <div className="w-full flex gap-2 justify-between">
         <SearchBar />
-        <button className="btn btn-sm btn-primary" onClick={handleAddBtnClick}>
+        <button
+          className="btn btn-sm btn-outline normal-case"
+          onClick={handleAddBtnClick}
+        >
           Add
         </button>
       </div>

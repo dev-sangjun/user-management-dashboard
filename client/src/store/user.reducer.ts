@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 import userAPI from "../api/user.api";
-import { CustomFields } from "../global/entity.types";
+import { CustomFields } from "../global/types";
 
 interface UserState {
   userId: string | null;

@@ -1,8 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import { IEntry } from "../global/entity.types";
 import entryAPI from "../api/entry.api";
-import { QueryType } from "../global/types";
+import { IEntry, QueryType } from "../global/types";
 
 interface EntryState {
   entries: IEntry[];

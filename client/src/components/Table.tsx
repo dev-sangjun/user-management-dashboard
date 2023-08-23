@@ -3,8 +3,8 @@ import { AppDispatch, RootState } from "../store";
 import { getEntries, selectEntry } from "../store/entry.reducer";
 import { useDispatch } from "react-redux";
 import { openModal } from "../store/modal.reducer";
+import { formatValue } from "../utils";
 import { USER_ENTRY_DEFAULT_FIELDS } from "../global/constants";
-import { formatValue } from "../utils/entry.utils";
 
 const Table = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,13 +35,14 @@ const Table = () => {
       );
     });
   };
+  console.log(USER_ENTRY_DEFAULT_FIELDS);
   return (
     <div className="w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
       <table className="w-full">
         <tbody>
           <tr className="border-b border-b-slate-300">
             {USER_ENTRY_DEFAULT_FIELDS.map(field => (
-              <th key={field} className="p-4 bg-teal-700 text-white text-left">
+              <th key={field} className="p-4 bg-primary text-white text-left">
                 {field}
               </th>
             ))}

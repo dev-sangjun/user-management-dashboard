@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import { IEntry } from "../global/entity.types";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { closeModal, getModalType } from "../store/modal.reducer";
 import { USER_ENTRY_FIELD_NAMES } from "../global/constants";
-import { formatValue } from "../utils/entry.utils";
+import { formatValue } from "../utils";
 import { useDispatch } from "react-redux";
+import { IEntry } from "../global/types";
 
 interface EntryViewModalProps {
   entry?: IEntry;

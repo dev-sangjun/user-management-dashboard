@@ -9,6 +9,7 @@ import authAPI from "../../api/auth.api";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { asyncFetchUser } from "../../store/user.reducer";
+import { INPUT_CLASSES } from "../../global/constants";
 
 const getUserFormTexts = (isSignIn: boolean) => ({
   mode: isSignIn ? "Sign in" : "Sign up",
@@ -33,7 +34,7 @@ const UserForm = () => {
       <>
         <label className="label text-sm">{label}</label>
         <input
-          className="input input-sm input-bordered w-full text-[16px]"
+          className={INPUT_CLASSES}
           type={type}
           placeholder={label}
           autoComplete={isSignIn ? "on" : "off"}

@@ -1,5 +1,6 @@
 import { UseFormRegisterReturn, useForm } from "react-hook-form";
-import { UserStatus, isUserStatus } from "../../global/types";
+import { UserStatus } from "../../global/types";
+import { isUserStatus } from "../../utils";
 
 interface FormValues {
   firstName: string;

@@ -2,17 +2,18 @@ import { useEffect, useRef } from "react";
 import { AppDispatch, RootState } from "../../store";
 import { closeModal, getModalType } from "../../store/modal.reducer";
 import useEntryForm from "./useEntryForm";
-import { USER_STATUS } from "../../global/types";
 import { useDispatch } from "react-redux";
 import entryAPI from "../../api/entry.api";
 import { asyncFetchEntries } from "../../store/entry.reducer";
 import { useSelector } from "react-redux";
 import {
+  INPUT_CLASSES,
   USER_ENTRY_DEFAULT_KEYS,
   USER_ENTRY_FIELD_NAMES,
+  USER_STATUS,
 } from "../../global/constants";
 import { getUser } from "../../store/user.reducer";
-import { CustomFields } from "../../global/entity.types";
+import { CustomFields } from "../../global/types";
 
 const EntryFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +30,7 @@ const EntryFormModal = () => {
         <input
           key={key}
           name={key}
-          className="input input-sm input-bordered w-full text-[16px]"
+          className={INPUT_CLASSES}
           type={value}
           placeholder={key}
         />
@@ -41,6 +42,7 @@ const EntryFormModal = () => {
   const { registerers, handleSubmit, reset } = useEntryForm();
   const onSubmit = handleSubmit(async data => {
     if (formRef.current) {
+      // construct additionalInputObj to contain key-value pair for customFields
       const additionalInputObj: CustomFields = {};
       Object.values(formRef.current)
         .filter(
@@ -52,10 +54,11 @@ const EntryFormModal = () => {
           additionalInputObj[element.name] = element.value;
         });
       try {
+        // attach additionalInputObj (customFields) to entry.other
         await entryAPI.addEntry({
           ...data,
           other: additionalInputObj,
-          address: data.address.split("\n"),
+          address: data.address.split("\n"), // send address as string[], separated by newline char
         });
         reset();
         await dispatch(asyncFetchEntries({}));
@@ -113,7 +116,7 @@ const EntryFormModal = () => {
             <input
               key={idx}
               type={getInputType(registerer.name)}
-              className="input input-sm input-bordered w-full text-[16px]"
+              className={INPUT_CLASSES}
               placeholder={
                 USER_ENTRY_FIELD_NAMES?.[registerer.name] || registerer.name
               }

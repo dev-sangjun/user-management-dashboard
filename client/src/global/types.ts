@@ -1,9 +1,25 @@
 export type UserStatus = "Inquiry" | "Onboarding" | "Active" | "Churned";
-export const USER_STATUS = ["Inquiry", "Onboarding", "Active", "Churned"];
-export const isUserStatus = (status: string) => USER_STATUS.includes(status);
+
 export type QueryType = {
   page?: string;
   limit?: string;
   field?: string;
   value?: string;
 };
+export type CustomFields = { [key: string]: string };
+
+export interface IUser {
+  id: string;
+  customFields?: CustomFields;
+}
+
+export interface IEntry {
+  _id: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  birthDate: Date;
+  status: UserStatus;
+  address: string[];
+  other: CustomFields;
+}

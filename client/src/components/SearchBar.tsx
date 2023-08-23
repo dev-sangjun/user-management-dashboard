@@ -4,6 +4,7 @@ import { getUser } from "../store/user.reducer";
 import {
   USER_ENTRY_FIELD_NAMES,
   USER_ENTRY_DEFAULT_KEYS,
+  INPUT_CLASSES,
 } from "../global/constants";
 import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -55,12 +56,8 @@ const SearchBar = () => {
   return (
     <form className="flex gap-2 w-full" onSubmit={handleSubmit}>
       {renderFields()}
-      <input
-        name="field-value"
-        className="input input-sm input-bordered w-full text-[16px]"
-        placeholder="Value"
-      />
-      <button className="btn btn-sm btn-primary">Search</button>
+      <input name="field-value" className={INPUT_CLASSES} placeholder="Value" />
+      <button className="btn btn-sm btn-outline normal-case">Search</button>
     </form>
   );
 };

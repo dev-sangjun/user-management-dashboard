@@ -5,8 +5,11 @@ import { closeModal, getModalType } from "../store/modal.reducer";
 import { useDispatch } from "react-redux";
 import userAPI from "../api/user.api";
 import { asyncFetchUser } from "../store/user.reducer";
-import { CustomFields } from "../global/entity.types";
-import { ADDITIONAL_INPUT_NAME_PREFIX } from "../global/constants";
+import {
+  ADDITIONAL_INPUT_NAME_PREFIX,
+  INPUT_CLASSES,
+} from "../global/constants";
+import { CustomFields } from "../global/types";
 
 const CustomFieldsFormModal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,12 +67,12 @@ const CustomFieldsFormModal = () => {
         <div key={idx} className="flex gap-2">
           <input
             name={`${ADDITIONAL_INPUT_NAME_PREFIX}-key-${idx}`}
-            className="input input-sm input-bordered text-[16px] w-1/3"
+            className={`${INPUT_CLASSES} w-1/3`}
             placeholder="Field Name"
           />
           <input
             name={`${ADDITIONAL_INPUT_NAME_PREFIX}-value-${idx}`}
-            className="input input-sm input-bordered w-full text-[16px]"
+            className={INPUT_CLASSES}
             placeholder="Field Value"
           />
         </div>
