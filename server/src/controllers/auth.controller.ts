@@ -23,7 +23,7 @@ const signInUser = async (req: Request, res: Response, next: NextFunction) => {
     return res
       .cookie("accessToken", accessToken, {
         httpOnly: true, // disable access from external scripts
-        sameSite: true,
+        sameSite: "strict",
       })
       .json({ userId, customFields });
   } catch (e) {
