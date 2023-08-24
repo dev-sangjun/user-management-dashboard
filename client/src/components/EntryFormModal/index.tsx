@@ -143,7 +143,7 @@ const EntryFormModal = () => {
         onSubmit={onSubmit}
         ref={formRef}
       >
-        <h3 className="font-bold text-lg">User Data Entry Form</h3>
+        <h3 className="font-bold text-lg">Patient Data Entry Form</h3>
         {renderInputs()}
         {renderCustomFields()}
         <div className="flex mx-auto">

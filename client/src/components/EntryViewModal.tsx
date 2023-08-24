@@ -54,7 +54,7 @@ const EntryViewModal: React.FC<EntryViewModalProps> = ({ entry }) => {
   return (
     <dialog className="modal" ref={dialogRef}>
       <div className="modal-box flex flex-col gap-2 ">
-        <h3 className="font-bold text-lg">User Data Entry</h3>
+        <h3 className="font-bold text-lg">Patient Data Entry</h3>
         {renderEntryDetails()}
         <button
           type="button"
